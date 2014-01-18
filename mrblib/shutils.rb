@@ -37,11 +37,18 @@ module SHUtils
   # FIXME: this should go away by porting the official fileutils
   module FileUtils
 
+    def self.readable?(file)
+      File.open(file) {}
+      true
+    rescue Errno::EACCES
+      false
+    end
+
     # Remove all the entries in a directory recursively
     #
     # FIXME: mruby does not have fileutils right now
     #
-    def rm_rf(path)
+    def self.rm_rf(path)
       if File.symlink?(path) or !File.directory?(path)
         File.delete(path)
         return
