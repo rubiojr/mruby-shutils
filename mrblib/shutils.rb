@@ -10,24 +10,24 @@ module SHUtils
   end
 
   module Log
-    def self.debug?
+    def debug?
       !ENV['DEBUG'].nil?
     end
 
-    def self.error(msg, exit_if_err = 0)
+    def error(msg, exit_if_err = 0)
       $stderr.puts "\e[91mERROR:\e[0m #{msg}"
       exit exit_if_err if exit_if_err != 0
     end
 
-    def self.warn(msg)
+    def warn(msg)
       $stderr.puts "\e[93mWARN:\e[0m #{msg}"
     end
 
-    def self.info(msg)
+    def info(msg)
       $stdout.puts "INFO: #{msg}"
     end
 
-    def self.debug(msg, debug = false)
+    def debug(msg, debug = false)
       if ENV["DEBUG"] or debug
         $stdout.puts "DEBUG: #{msg}"
       end
