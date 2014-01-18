@@ -68,13 +68,21 @@ module SHUtils
     # FIXME: fileutils for mruby will remove this
     #
     def self.mkdir_p(path)
-      path.split("/").each do |comp|
-        target = File.join(target || comp, comp)
-        unless File.directory?(target)
-          debug "Creating dir #{target}"
-          Dir.mkdir target
+      targets = []
+      targets << path if path.is_a?(String)
+
+      targets.each do |t|
+        t.split("/").each do |comp|
+          target = File.join(target || comp, comp)
+          unless File.directory?(target)
+            debug "Creating dir #{target}"
+            Dir.mkdir target
+            targets << target
+          end
         end
       end
+
+      targets
     end
 
     # Remove all the entries in a directory recursively
