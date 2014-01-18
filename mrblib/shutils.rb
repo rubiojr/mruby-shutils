@@ -63,7 +63,7 @@ module SHUtils
       # ignore
     end
     
-    def mkdir_p(list, options = {})
+    def self.mkdir_p(list, options = {})
       list = fu_list(list)
       return *list if options[:noop]
 
@@ -141,14 +141,14 @@ module SHUtils
 
     private
     # from Ruby's lib/fileutils.rb
-    def fu_mkdir(path, mode)   #:nodoc:
+    def self.fu_mkdir(path, mode)   #:nodoc:
       path = remove_tailing_slash(path)
       Dir.mkdir path
     end
-    def remove_tailing_slash(dir)
+    def self.remove_tailing_slash(dir)
       dir == '/' ? dir : dir.chomp(?/)
     end
-    def fu_list(arg)   #:nodoc:
+    def self.fu_list(arg)   #:nodoc:
       [arg].flatten.map {|path| path }
     end
   end
