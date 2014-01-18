@@ -68,9 +68,8 @@ module SHUtils
     # FIXME: fileutils for mruby will remove this
     #
     def self.mkdir_p(path)
-      target = "/"
       path.split("/").each do |comp|
-        target = File.join(target, comp)
+        target = File.join(target || comp, comp)
         unless File.directory?(target)
           debug "Creating dir #{target}"
           Dir.mkdir target
