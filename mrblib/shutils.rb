@@ -36,7 +36,7 @@ module SHUtils
 
   # FIXME: this should go away by porting the official fileutils
   module FileUtils
-    include Log
+    extend Log
 
     def self.readable?(file)
       File.open(file) {}
@@ -223,7 +223,7 @@ module SHUtils
   end
 
   module PKG
-    include Log
+    extend Log
 
     def self.pkg_installed?(pkg)
       system("dpkg-query --show #{pkg} > /dev/null 2>&1")
