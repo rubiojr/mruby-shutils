@@ -1,0 +1,6 @@
+name: mruby-shutils
+description: Shell utils for Linux systems
+author: Sergio Rubio <rubiojr@frameos.org>
+website: https://github.com/rubiojr/mruby-shutils
+protocol: git
+repository: https://github.com/rubiojr/mruby-shutils
