@@ -44,6 +44,39 @@ module SHUtils
       false
     end
 
+    # List all the entries in a directory recursively
+    #
+    # FIXME: mruby does not have fileutils right now
+    #
+    def self.list_dir(dir, entries = [])
+      Dir.entries(dir).reject {|n| n == '.' or n == '..' }.each do |e|
+        path = File.join(dir, e)
+        if File.directory?(path)
+          list_dir(path, entries)
+        end
+        entries << path
+      end
+      entries
+    rescue Errno::EACCES => e
+      debug "Ignoring file/dir: #{e.message}"
+      # ignore
+    end
+
+    # Create a directory and all its parent directories
+    #
+    # FIXME: fileutils for mruby will remove this
+    #
+    def self.mkdir_p(path)
+      target = "/"
+      path.split("/").each do |comp|
+        target = File.join(target, comp)
+        unless File.directory?(target)
+          debug "Creating dir #{target}"
+          Dir.mkdir target
+        end
+      end
+    end
+
     # Remove all the entries in a directory recursively
     #
     # FIXME: mruby does not have fileutils right now
