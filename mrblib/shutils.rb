@@ -10,24 +10,24 @@ module SHUtils
   end
 
   module Log
-    def debug?
+    def self.debug?
       !ENV['DEBUG'].nil?
     end
 
-    def error(msg, exit_if_err = 0)
+    def self.error(msg, exit_if_err = 0)
       $stderr.puts "\e[91mERROR:\e[0m #{msg}"
       exit exit_if_err if exit_if_err != 0
     end
 
-    def warn(msg)
+    def self.warn(msg)
       $stderr.puts "\e[93mWARN:\e[0m #{msg}"
     end
 
-    def info(msg)
+    def self.info(msg)
       $stdout.puts "INFO: #{msg}"
     end
 
-    def debug(msg, debug = false)
+    def self.debug(msg, debug = false)
       if ENV["DEBUG"] or debug
         $stdout.puts "DEBUG: #{msg}"
       end
@@ -36,6 +36,7 @@ module SHUtils
 
   # FIXME: this should go away by porting the official fileutils
   module FileUtils
+    include Log
 
     def self.readable?(file)
       File.open(file) {}
@@ -186,6 +187,8 @@ module SHUtils
     # :ignore_output - Redirect stderr and stdout to /dev/null
     # :exit_if_err   - Raise an exception if the command fails
     #
+    # FIXME: pretty ugly, but mruby-io is somewhat incomplete
+    #
     def self.cmd(str, opts = {})
       set_default :ignore_output, !debug?, opts
       set_default :exit_if_err, true, opts
@@ -220,6 +223,8 @@ module SHUtils
   end
 
   module PKG
+    include Log
+
     def self.pkg_installed?(pkg)
       system("dpkg-query --show #{pkg} > /dev/null 2>&1")
     end
