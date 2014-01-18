@@ -62,28 +62,37 @@ module SHUtils
       debug "Ignoring file/dir: #{e.message}"
       # ignore
     end
+    
+    def mkdir_p(list, options = {})
+      list = fu_list(list)
+      return *list if options[:noop]
 
-    # Create a directory and all its parent directories
-    #
-    # FIXME: fileutils for mruby will remove this
-    #
-    def self.mkdir_p(path)
-      targets = []
-      targets << path if path.is_a?(String)
+      list.map {|path| remove_tailing_slash(path)}.each do |path|
+        # optimize for the most common case
+        begin
+          fu_mkdir path, options[:mode]
+          next
+        rescue SystemCallError
+          next if File.directory?(path)
+        end
 
-      targets.each do |t|
-        t.split("/").each do |comp|
-          target = File.join(target || comp, comp)
-          unless File.directory?(target)
-            debug "Creating dir #{target}"
-            Dir.mkdir target
-            targets << target
+        stack = []
+        until path == stack.last   # dirname("/")=="/", dirname("C:/")=="C:/"
+          stack.push path
+          path = File.dirname(path)
+        end
+        stack.reverse.each do |dir|
+          begin
+            fu_mkdir dir, options[:mode]
+          rescue SystemCallError
+            raise unless File.directory?(dir)
           end
         end
       end
 
-      targets
+      return *list
     end
+
 
     # Remove all the entries in a directory recursively
     #
@@ -128,6 +137,19 @@ module SHUtils
       else
         path
       end
+    end
+
+    private
+    # from Ruby's lib/fileutils.rb
+    def fu_mkdir(path, mode)   #:nodoc:
+      path = remove_tailing_slash(path)
+      Dir.mkdir path
+    end
+    def remove_tailing_slash(dir)
+      dir == '/' ? dir : dir.chomp(?/)
+    end
+    def fu_list(arg)   #:nodoc:
+      [arg].flatten.map {|path| path }
     end
   end
 
