@@ -63,6 +63,7 @@ module SHUtils
   # FIXME: this should go away by porting the official fileutils
   module FileUtils
     extend Log
+    extend Helpers
 
     def self.readable?(file)
       File.open(file) {}
