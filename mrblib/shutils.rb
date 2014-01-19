@@ -1,5 +1,31 @@
 module SHUtils
 
+  module Distro
+
+    def self.release
+      lsb_key :release
+    end
+
+    def self.codename
+      lsb_key :codename
+    end
+
+    def ubuntu?
+      (File.open('/etc/issue').read =~ /^Ubuntu/) == 0
+    rescue
+      false
+    end
+
+    private
+    def lsb_key(k)
+      `lsb_release --#{k}`.split()[-1].strip.chomp.to_sym
+    rescue => e
+      debug e.message
+      :unknown
+    end
+
+  end
+
   module Helpers
     def set_default(key, value, hash)
       hash[key] = value if hash[key].nil?
