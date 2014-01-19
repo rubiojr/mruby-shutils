@@ -276,7 +276,7 @@ module SHUtils
     end
 
     def self.command_available?(c)
-      system "which #{c}"
+      system "which #{c} > /dev/null 2>&1"
     end
 
   end
