@@ -275,6 +275,10 @@ module SHUtils
       ok
     end
 
+    def self.command_available?(c)
+      system "which #{c}"
+    end
+
   end
 
   module PKG
@@ -286,8 +290,7 @@ module SHUtils
 
     def self.requires_pkg!(pkg)
       unless pkg_installed?(pkg)
-        error "Debian package '#{pkg}' is required but not installed."
-        raise "Run 'lxc-ghe prepare' first"
+        raise "Debian package '#{pkg}' is required but not installed."
       end
     end
 
